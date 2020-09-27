@@ -7,20 +7,23 @@ import re
 # Wraps 'stream' at 'cutoff' (including)
 def wrap_block(stream, indent=0, trail=0, cutoff=80):
     stream = re.sub('\n', ' ', stream)
+
     if len(stream) + indent <= cutoff:
-        print(" " * indent + stream.rstrip())
-    else:
-        line = ""
-        linelen = indent
-        for word in stream.split():
-            if linelen + len(word) > cutoff:
-                print(" " * indent + line.rstrip())
-                line = ""
-                linelen = indent
-            line += word + " "
-            linelen += len(word) + 1
-    if trail > 0:
-        print("\n" * (trail - 1))
+        return " " * indent + stream + "\n" + "\n" * trail
+
+    block = ""
+    line = ""
+    linelen = indent
+    for word in stream.split():
+        if linelen + len(word) > cutoff:
+            block += " " * indent + line + "\n"
+            line = ""
+            linelen = indent
+        line += word + " "
+        linelen += len(word) + 1
+    block += " " * indent + line + "\n"
+
+    return block + "\n" * trail
 
 
 # Creates single-line text blocks from 'stream'
@@ -29,18 +32,22 @@ def wrap_block(stream, indent=0, trail=0, cutoff=80):
 #
 #     An array of tuples of the form (block, indent, trail)
 def create_blocks(stream):
-    # Removes leading and trail empty lines
-    stream = stream.rstrip().split("\n")
-    i = 0
-    while len(stream[i].rstrip()) == 0:
-        i += 1
-    stream = stream[i:]
+    stream = stream.split("\n")
 
     numlines = len(stream)
+    p = 0
+    q = numlines
+    while len(stream[p].rstrip()) == 0:
+        p += 1
+    while len(stream[q - 1].rstrip()) == 0:
+        q -= 1
 
-    # Create blocks. Strip whitespace.
+    blocks = [(p, numlines - q)]
+    stream = stream[p:q]
+    numlines = q - p
+
+    # Create blocks
     i = 0
-    blocks = []
     blockline = ""
     indent = 0
     trail = 0
@@ -49,8 +56,8 @@ def create_blocks(stream):
         linelen = len(line.rstrip())
         if linelen == 0:
             while linelen == 0:
-                trail += 1
                 i += 1
+                trail += 1
                 line = stream[i]
                 linelen = len(line.rstrip())
             blockline = re.sub('( )+', ' ', blockline)
