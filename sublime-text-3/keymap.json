@@ -1,0 +1,4 @@
+[
+    { "keys": ["ctrl+shift+q"], "command": "pywrap_selection" },
+    { "keys": ["ctrl+q"], "command": "pywrap_block" },
+]

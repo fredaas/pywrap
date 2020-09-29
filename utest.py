@@ -2,35 +2,38 @@
 
 from pywrap import *
 
+def write(path, string):
+    f = open(path, "w", newline="")
+    f.write(string)
+    f.close()
+
+def read(path):
+    f = open(path, "r", newline="")
+    string = f.read()
+    f.close()
+    return string
+
 # Test 1
-text = open("./tests/test_1.txt", "r").read()
-out = wrap_block(text)
-fout = open("./testout/test_1.out", "w")
-fout.write(out)
-fout.close()
+string = read("./tests/test_1.txt")
+string = wrap_block(string)
+write("./testout/test_1.txt", string)
 
 # Test 2
-text = open("./tests/test_2.txt", "r").read()
-blocks = create_blocks(text)
-a, b = blocks[0]
-indent = blocks[1][1]
-out = "\n" * a
-for block, local_indent, trail in blocks[1:]:
-    out += wrap_block(block, indent, trail, 60)
-out += "\n" * b
-fout = open("./testout/test_2.out", "w")
-fout.write(out)
-fout.close()
+string = read("./tests/test_2.txt")
+newlines, blocks = create_blocks(string)
+print(newlines, blocks)
+string = "\n" * newlines
+i = blocks[0][0]
+for _, n, b in blocks:
+    string += wrap_block(b, i, n)
+write("./testout/test_2.txt", string)
 
 # Test 3
-text = open("./tests/test_3.txt", "r").read()
-blocks = create_blocks(text)
-a, b = blocks[0]
-indent = blocks[1][1]
-out = "\n" * a
-for block, local_indent, trail in blocks[1:]:
-    out += wrap_block(block, indent, trail, 60)
-out += "\n" * b
-fout = open("./testout/test_3.out", "w")
-fout.write(out)
-fout.close()
+string = read("./tests/test_3.txt")
+newlines, blocks = create_blocks(string)
+print(newlines, blocks)
+string = "\n" * newlines
+i = blocks[0][0]
+for _, n, b in blocks:
+    string += wrap_block(b, i, n)
+write("./testout/test_3.txt", string)
