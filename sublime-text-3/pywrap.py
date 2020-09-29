@@ -5,7 +5,7 @@ import re
 
 # TODO: Import pywrap methods.
 
-class PywrapBlock(sublime_plugin.TextCommand):
+class PywrapBlockCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         for region in self.view.sel():
             region = expand_to_paragraph(self.view, region.begin())
