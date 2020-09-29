@@ -4,6 +4,26 @@ import sys
 import re
 
 
+def break_line(stream, cutoff=80):
+    if len(stream) <= cutoff:
+        return stream.rstrip() + "\n"
+
+    char = stream[cutoff]
+    i = cutoff
+    while char != " ":
+        i -= 1
+        char = stream[i]
+
+    indent = len(stream) - len(stream.lstrip())
+    a = stream[:i + 1]
+    b = stream[i + 1:].strip()
+
+    if len(b) > 0:
+        return a + "\n" + indent * " " + b + "\n"
+
+    return a + "\n"
+
+
 #
 # Wraps 'stream' at 'cutoff' (including)
 #

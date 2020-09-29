@@ -44,3 +44,11 @@ i = blocks[0][0]
 for _, n, b in blocks:
     string += wrap_block(b, i, n)
 write("./testout/test4.txt", string)
+
+# Test 5
+string = read("./tests/test5.txt")
+f = open("./testout/test5.txt", "w", newline="")
+for i, line in enumerate(string.split("\n")):
+    f.write("Line " + str(i) + "\n")
+    f.write(break_line(line))
+f.close()

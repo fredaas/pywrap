@@ -3,7 +3,11 @@ import sublime_plugin
 from Default.paragraph import expand_to_paragraph
 import re
 
-# TODO: Import pywrap methods.
+# TODO: Import pywrap methods
+
+# point = view.sel()[0].begin()
+# row, col = view.rowcol(point)
+# line = view.substr(view.line(point))
 
 class PywrapBlockCommand(sublime_plugin.TextCommand):
     def run(self, edit):
