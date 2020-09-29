@@ -3,7 +3,9 @@
 import sys
 import re
 
-
+#
+# Breaks 'stream' at 'cutoff' (including)
+#
 def break_line(stream, cutoff=80):
     if len(stream) <= cutoff:
         return stream.rstrip() + "\n"

@@ -1,7 +1,7 @@
 DESCRIPTION
 -------------------------------------------------------------------------------
 
-A tiny Python module which provides methods to hard-wrap text.
+Wrap text the hard way.
 
 FEATURE REQUEST
 -------------------------------------------------------------------------------
