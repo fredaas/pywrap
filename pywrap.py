@@ -4,48 +4,39 @@ import sys
 import re
 
 #
-# Breaks 'stream' at 'cutoff' (including)
+# Returns the number of leading spaces in 's'
 #
-def break_line(stream, cutoff=80):
-    if len(stream) <= cutoff:
-        return stream.rstrip() + "\n"
-
-    char = stream[cutoff]
-    i = cutoff
-    while char != " ":
-        i -= 1
-        char = stream[i]
-
-    indent = len(stream) - len(stream.lstrip())
-    a = stream[:i + 1]
-    b = stream[i + 1:].strip()
-
-    if len(b) > 0:
-        return a + "\n" + indent * " " + b + "\n"
-
-    return a + "\n"
-
+def lspace(s):
+    i = 0
+    while i < len(s) and s[i] == " ":
+        i += 1
+    return i
 
 #
 # Wraps 'stream' at 'cutoff' (including)
 #
-def wrap_block(stream, indent=0, newlines=0, cutoff=80):
-    stream = re.sub('\n', ' ', stream)
+def wrap_stream(stream, indent=None, newlines=0, cutoff=80):
+    if not indent:
+        indent = lspace(stream)
+
+    stream = re.sub('(\n)+', ' ', stream)
+    stream = re.sub('( )+', ' ', stream)
+    stream = stream.strip()
 
     if len(stream) + indent <= cutoff:
-        return " " * indent + stream.rstrip() + "\n" + "\n" * newlines
+        return " " * indent + stream + "\n" + "\n" * newlines
 
     block = ""
     line = ""
     linelen = indent
     for word in stream.split():
         if linelen + len(word) > cutoff:
-            block += " " * indent + line.rstrip() + "\n"
+            block += " " * indent + line + "\n"
             line = ""
             linelen = indent
         line += word + " "
         linelen += len(word) + 1
-    block += " " * indent + line.rstrip() + "\n"
+    block += " " * indent + line + "\n"
 
     return block + "\n" * newlines
 
@@ -59,7 +50,7 @@ def wrap_block(stream, indent=0, newlines=0, cutoff=80):
 #     block, and the number of newlines following the block. The tuple is of
 #     the form:
 #
-#         (block_indent, block_newlines, block)
+#         (block, block_indent, block_newlines)
 #
 def create_blocks(stream):
     stream = [ x.rstrip() for x in stream.split("\n") ]
@@ -81,7 +72,7 @@ def create_blocks(stream):
                 i += 1
             if blockline != "":
                 blockline = re.sub('( )+', ' ', blockline.lstrip())
-                blocks.append((block_indent, block_newlines, blockline))
+                blocks.append((blockline, block_indent, block_newlines))
                 blockline = ""
             else:
                 newlines = block_newlines
@@ -89,11 +80,11 @@ def create_blocks(stream):
                 break
             line = stream[i]
         if blockline == "":
-            block_indent = len(line) - len(line.lstrip())
+            block_indent = lspace(line)
         blockline += line
         i += 1
 
     if blockline != "":
-        blocks.append((block_indent, 0, blockline))
+        blocks.append((blockline, block_indent, 0))
 
     return newlines, blocks

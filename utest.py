@@ -13,42 +13,31 @@ def read(path):
     f.close()
     return string
 
-# Test 1
+# # Test 1
 string = read("./tests/test1.txt")
-string = wrap_block(string)
+string = wrap_stream(string)
 write("./testout/test1.txt", string)
 
 # Test 2
 string = read("./tests/test2.txt")
 newlines, blocks = create_blocks(string)
 string = "\n" * newlines
-i = blocks[0][0]
-for _, n, b in blocks:
-    string += wrap_block(b, i, n)
+for block in blocks:
+    string += wrap_stream(*block)
 write("./testout/test2.txt", string)
 
 # Test 3
 string = read("./tests/test3.txt")
 newlines, blocks = create_blocks(string)
 string = "\n" * newlines
-i = blocks[0][0]
-for _, n, b in blocks:
-    string += wrap_block(b, i, n)
+for block in blocks:
+    string += wrap_stream(*block)
 write("./testout/test3.txt", string)
 
 # Test 4
 string = read("./tests/test4.txt")
 newlines, blocks = create_blocks(string)
 string = "\n" * newlines
-i = blocks[0][0]
-for _, n, b in blocks:
-    string += wrap_block(b, i, n)
+for block in blocks:
+    string += wrap_stream(*block)
 write("./testout/test4.txt", string)
-
-# Test 5
-string = read("./tests/test5.txt")
-f = open("./testout/test5.txt", "w", newline="")
-for i, line in enumerate(string.split("\n")):
-    f.write("Line " + str(i) + "\n")
-    f.write(break_line(line))
-f.close()
