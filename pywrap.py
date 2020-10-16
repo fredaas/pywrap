@@ -3,6 +3,7 @@
 import sys
 import re
 
+
 #
 # Returns the number of leading spaces in 's'
 #
@@ -11,6 +12,7 @@ def lspace(s):
     while i < len(s) and s[i] == " ":
         i += 1
     return i
+
 
 #
 # Wraps 'stream' at 'cutoff' (including)
@@ -31,7 +33,7 @@ def wrap_stream(stream, indent=None, newlines=0, cutoff=80):
     linelen = indent
     for word in stream.split():
         if linelen + len(word) > cutoff:
-            block += " " * indent + line + "\n"
+            block += " " * indent + line.rstrip() + "\n"
             line = ""
             linelen = indent
         line += word + " "
