@@ -33,7 +33,7 @@ def wrap_stream(stream, indent=None, newlines=0, cutoff=80):
             linelen = indent
         line += word + " "
         linelen += len(word) + 1
-    block += " " * indent + line + "\n"
+    block += " " * indent + line.rstrip() + "\n"
 
     return block + "\n" * newlines
 
@@ -67,7 +67,7 @@ def create_blocks(stream):
             line = stream[i]
         if blockline == "":
             block_indent = lspace(line)
-        blockline += line
+        blockline += line + " "
         i += 1
 
     if blockline != "":
@@ -87,20 +87,20 @@ class WrapBlock(sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         wrap_width = get_wrap_width(view)
-        for region in view.sel():
-            region = expand_to_paragraph(view, region.begin())
-            string = wrap_stream(view.substr(region), cutoff=wrap_width)
-            view.replace(edit, sublime.Region(region.begin(), region.end()), string)
+        region = view.sel()[0]
+        region = expand_to_paragraph(view, region.begin())
+        string = wrap_stream(view.substr(region), cutoff=wrap_width)
+        view.replace(edit, sublime.Region(region.begin(), region.end()), string)
 
 
 class WrapSelection(sublime_plugin.TextCommand):
     def run(self, edit):
         view = self.view
         wrap_width = get_wrap_width(view)
-        for region in view.sel():
-            if not region.empty():
-                newlines, blocks = create_blocks(self.view.substr(region))
-                string = "\n" * newlines
-                for block in blocks:
-                    string += wrap_stream(*block, cutoff=wrap_width)
-                self.view.replace(edit, region, string)
+        region = view.sel()[0]
+        if not region.empty():
+            newlines, blocks = create_blocks(self.view.substr(region))
+            string = "\n" * newlines
+            for block in blocks:
+                string += wrap_stream(*block, cutoff=wrap_width)
+            self.view.replace(edit, region, string)
