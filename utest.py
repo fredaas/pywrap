@@ -13,7 +13,7 @@ def read(path):
     f.close()
     return string
 
-# # Test 1
+# Test 1
 string = read("./tests/test1.txt")
 string = wrap_stream(string)
 write("./testout/test1.txt", string)
@@ -41,3 +41,11 @@ string = "\n" * newlines
 for block in blocks:
     string += wrap_stream(*block)
 write("./testout/test4.txt", string)
+
+string = read("./tests/test6.txt")
+newlines, blocks = create_blocks(string, tokens="# - //".split())
+string = "\n" * newlines
+for block in blocks:
+    string += wrap_stream(*block, cutoff=30)
+write("./testout/test6.txt", string)
+
