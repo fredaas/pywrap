@@ -56,22 +56,22 @@ def wrap_stream(stream, indent=None, newlines=0, cutoff=80):
         prefix_indent += len(prefix) + 1
         prefix += " "
 
-    if len(stream) + indent <= cutoff:
+    if len(stream) + prefix_indent < cutoff:
         return " " * indent + prefix + stream + "\n" + "\n" * newlines
 
     leader = 1
     block = ""
     line = ""
-    linelen = indent
+    linelen = 0
     for word in stream.split():
-        if linelen + len(word) > cutoff:
+        if linelen + prefix_indent + len(word) >= cutoff:
             if not leader:
                 block += " " * prefix_indent + line.rstrip() + "\n"
             else:
                 leader = 0
                 block += " " * indent + prefix + line.rstrip() + "\n"
             line = ""
-            linelen = indent
+            linelen = 0
         line += word + " "
         linelen += len(word) + 1
     block += " " * prefix_indent + line.rstrip() + "\n"
