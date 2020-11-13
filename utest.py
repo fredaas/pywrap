@@ -42,10 +42,18 @@ for block in blocks:
     string += wrap_stream(*block)
 write("./testout/test4.txt", string)
 
+# Test 5
+string = read("./tests/test5.txt")
+newlines, blocks = create_blocks(string)
+string = "\n" * newlines
+for block in blocks:
+    string += wrap_stream(*block)
+write("./testout/test5.txt", string)
+
+# Test 6
 string = read("./tests/test6.txt")
-newlines, blocks = create_blocks(string, tokens="# - //".split())
+newlines, blocks = create_blocks(string)
 string = "\n" * newlines
 for block in blocks:
     string += wrap_stream(*block, cutoff=30)
 write("./testout/test6.txt", string)
-
