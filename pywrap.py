@@ -16,15 +16,30 @@ def match_token(s):
             break
         c = s[i]
         if c == "-":
-            return "-"
+            return c
+        if c == "*":
+            return c
+        if c == ">":
+            if i + 1 < l and c == s[i + 1]:
+                return ">>"
+            return c
         if c == "#":
-            return "#"
+            return c
         if c == "/":
             if i + 1 < l and c == s[i + 1]:
                 return "//"
         if c == "~":
-            return "~"
+            return c
     return ""
+
+
+#
+# Escapes 't'
+#
+def escape(t):
+    if t == "*":
+        return "\*"
+    return t
 
 
 #
@@ -49,7 +64,7 @@ def wrap_stream(stream, indent=None, newlines=0, cutoff=80):
 
     stream = re.sub('(\n)+', ' ', stream)
     stream = re.sub('( )+', ' ', stream)
-    stream = re.sub('({})'.format(prefix), '', stream, 1)
+    stream = re.sub('({})'.format(escape(prefix)), '', stream, 1)
     stream = stream.strip()
 
     if (len(prefix) > 0):
